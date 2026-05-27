@@ -47,7 +47,7 @@ export default function Navbar() {
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12 h-18 flex items-center justify-between" style={{ height: '72px' }}>
           {/* Logo */}
           <a href={`/${locale}`} className="flex items-center">
-            <Logo height={26} showSub={true} isDark={!scrolled} />
+            <Logo height={52} showSub={true} isDark={!scrolled} />
           </a>
 
           {/* Desktop Nav */}
