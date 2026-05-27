@@ -1,0 +1,148 @@
+{
+  "nav": {
+    "about": "About",
+    "expertise": "Expertise",
+    "portfolio": "Portfolio",
+    "vision": "Vision",
+    "insights": "Insights",
+    "contact": "Contact",
+    "language": "中文"
+  },
+  "hero": {
+    "tagline": "Strategic Investment & Partnership Platform",
+    "headline1_pre": "Connecting ",
+    "headline1_key": "Ideas,",
+    "headline2_key": "Capital",
+    "headline2_post": " and",
+    "headline3_key": "Opportunities.",
+    "subheadline": "Leapsun Partners builds bridges between innovation, industries, and global growth opportunities.",
+    "cta1": "Explore",
+    "cta2": "Contact Us",
+    "scroll": "Scroll to explore"
+  },
+  "about": {
+    "label": "About Leapsun",
+    "headline": "A New Paradigm in Strategic Partnership",
+    "body1": "Leapsun Partners is a strategic platform focused on connecting people, capital, and transformative ideas. We operate at the intersection of global markets, emerging industries, and long-term value creation.",
+    "body2": "Our approach is built on deep industry expertise, trusted relationships, and a relentless focus on building partnerships that endure.",
+    "stat1_value": "30+",
+    "stat1_label": "Years of Experience",
+    "stat2_value": "50+",
+    "stat2_label": "Global Partners",
+    "stat3_value": "5",
+    "stat3_label": "Focus Sectors"
+  },
+  "expertise": {
+    "label": "Our Expertise",
+    "headline": "Where We Create Value",
+    "items": [
+      {
+        "title": "Healthcare",
+        "desc": "Investing in next-generation healthcare systems and medical innovation across emerging markets."
+      },
+      {
+        "title": "Biotechnology",
+        "desc": "Partnering with pioneering biotech ventures transforming life sciences and therapeutics."
+      },
+      {
+        "title": "Cross-border Investments",
+        "desc": "Facilitating capital flows and strategic alignments across international markets."
+      },
+      {
+        "title": "Emerging Technology",
+        "desc": "Identifying and accelerating high-potential technology opportunities shaping tomorrow."
+      },
+      {
+        "title": "Strategic Partnerships",
+        "desc": "Forging alliances between corporates, governments, and innovators to unlock shared potential."
+      }
+    ]
+  },
+  "vision": {
+    "label": "Our Journey",
+    "headline": "Vision in Motion",
+    "items": [
+      {
+        "year": "2012",
+        "title": "Foundation",
+        "desc": "Leapsun Partners established with a vision to bridge Asia's capital with global innovation ecosystems."
+      },
+      {
+        "year": "2015",
+        "title": "Regional Expansion",
+        "desc": "Extended presence across Southeast Asia, forging cornerstone partnerships in key emerging markets."
+      },
+      {
+        "year": "2018",
+        "title": "Sector Diversification",
+        "desc": "Expanded into healthcare and biotechnology, establishing dedicated investment verticals."
+      },
+      {
+        "year": "2021",
+        "title": "Global Platform",
+        "desc": "Launched integrated cross-border investment platform connecting Asia Pacific with Europe."
+      },
+      {
+        "year": "2024",
+        "title": "Ecosystem Builder",
+        "desc": "Evolved into a full-spectrum ecosystem builder, cultivating sustainable innovation networks."
+      },
+      {
+        "year": "2030",
+        "title": "The Future",
+        "desc": "Building tomorrow's defining partnerships across health, technology, and sustainable growth."
+      }
+    ]
+  },
+  "insights": {
+    "label": "Insights",
+    "headline": "Perspectives on Global Growth",
+    "items": [
+      {
+        "category": "Healthcare",
+        "title": "The GLP-1 Revolution: Long-Acting Biologics and the Race to Redefine Metabolic Medicine",
+        "excerpt": "With semaglutide and tirzepatide driving record prescription volumes globally, China's homegrown long-acting GLP-1 agonists — led by NDA-stage candidates targeting both type-2 diabetes and obesity — are entering a pivotal regulatory window in 2025. Differentiated dosing profiles and manufacturing cost advantages could position domestic innovators as serious challengers in a market projected to surpass $150B by 2030.",
+        "readTime": "7 min read"
+      },
+      {
+        "category": "Deep Tech",
+        "title": "The 400G+ Race: Optical Communication Chips as the Unseen Engine of AI Infrastructure",
+        "excerpt": "As hyperscalers deploy GPU clusters at unprecedented density, silicon photonics and high-speed SerDes solutions have become critical bottlenecks — and investment opportunities — in the AI era. Chinese optical IC designers with Silicon Valley DNA are closing the performance gap on global incumbents, addressing a $12B optical transceiver market growing at 28% CAGR driven entirely by AI cluster interconnect demand.",
+        "readTime": "8 min read"
+      },
+      {
+        "category": "Investment",
+        "title": "China's 2025 Consumption Recovery: Why Full-Stack E-Commerce Operations Are the New Infrastructure Play",
+        "excerpt": "Five years of platform maturation across Tmall, Douyin Commerce and Pinduoduo have created a service layer where full-stack operators are capturing outsized margin as brand marketing spend normalises. Providers managing end-to-end GMV — from traffic acquisition through to last-mile fulfilment — for 200+ global brands are now filing for public listings, signalling institutional recognition of this structural shift.",
+        "readTime": "6 min read"
+      },
+      {
+        "category": "Markets",
+        "title": "Europe–Asia Health Brands: Pathways into China's $70B Premium Wellness Market",
+        "excerpt": "Post-pandemic health consciousness has permanently elevated Chinese consumer spending on premium supplements, functional nutrition and personalised wellness. EU-certified brands entering through cross-border e-commerce face a shorter regulatory path than domestic registration, while strategic distribution partnerships offer immediate access to China's 400M+ urban middle-class consumers seeking trusted international quality credentials.",
+        "readTime": "5 min read"
+      }
+    ]
+  },
+  "contact": {
+    "label": "Get In Touch",
+    "headline": "Let's Build the\nFuture Together",
+    "subheadline": "We're always looking for exceptional partnerships. Reach out to explore how we can work together.",
+    "form": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "company": "Company",
+      "message": "Tell us about your opportunity",
+      "submit": "Send Message"
+    },
+    "email": "ask@leapsunpartners.com",
+    "address_sg": "Singapore",
+    "address_sh": "Shanghai"
+  },
+  "footer": {
+    "tagline": "Connecting Ideas, Capital and Opportunities.",
+    "rights": "© 2024 Leapsun Partners. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  }
+}
