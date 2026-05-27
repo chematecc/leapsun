@@ -13,33 +13,34 @@ export default function Logo({ height = 28, showSub = true, isDark = false }: Lo
   const wordmarkColor = isDark ? '#FFFFFF' : '#1A2635';
 
   /*
-   * Geometry calibrated against the reference logo image:
+   * All coordinates derived from pixel-accurate measurements of the reference logo
+   * plus browser-measured rendered dimensions (wordmark = 106 × 26 px at height=26).
    *
-   *  arrowW = 2.6× height  → arrow spans from ~52 % of wordmark left edge to past right edge
-   *  arrowH = 1.05× height → tip floats ~1.05 letter-heights above cap-line (matches original)
-   *  viewBox 0 0 80 36, overflow: visible (tip at x=82 intentionally extends beyond SVG bounds)
+   * Coordinate system — viewBox "0 0 80 36":
+   *   SVG is right-aligned (right:0) and bottom-aligned (bottom:100%) to the wordmark.
+   *   arrowW = 2.6 × height  →  SVG left is at ~37 % of wordmark left edge
+   *   arrowH = 1.2 × height  →  SVG top is ~1.12 × cap-heights above the letters
+   *   marginBottom = -0.08 × height  →  SVG bottom overlaps letterforms by ~2 px
    *
-   *  Swoosh "M 16 38 C 28 36 50 22 64 10":
-   *    • Start (16, 38) — y=38 is outside viewBox but visible; maps to cap-height of letters
-   *    • CP1  (28, 36) → start tangent ≈ 9° above horizontal (nearly flat, matches original)
-   *    • CP2  (50, 22) → end tangent ≈ 37° above horizontal (rising toward arrowhead)
-   *    • End  (64, 10) — terminates inside the arrowhead base so the stroke is hidden
+   * Swoosh cubic Bezier  "M 16 32 C 36 29 46 16 55 8"
+   *   (16, 32) → start ≈ 49 % from wordmark left, AT cap-height
+   *   CP1 (36, 29) → start tangent ≈ 8.5° above horizontal (nearly flat, matches reference)
+   *   CP2 (46, 16) → end tangent   ≈ 42° above horizontal
+   *   (55,  8) → enters the arrowhead; stroke terminates hidden inside the filled shape
    *
-   *  Arrowhead "M 82 2 L 65 6 L 74 20 Z":
-   *    • Tip  (82,  2) — 1–2 px past the wordmark's right edge
-   *    • Wing (65,  6) — upper-left base
-   *    • Wing (74, 20) — lower base
-   *    • Centroid direction → ~40° above horizontal, matching the original
+   * Arrowhead triangle  "M 57 3 L 44 6 L 52 16 Z"
+   *   Tip    (57,  3) → 82 % from wordmark left, 26.5 px above cap-height  ✓ reference
+   *   Wing 1 (44,  6) → upper-left base
+   *   Wing 2 (52, 16) → lower base
+   *   Centroid-to-tip direction ≈ 42° above horizontal  ✓ reference
    *
-   *  Animation: swoosh uses pathLength draw-on; arrowhead uses opacity fade only
-   *  (no scale) so the shape is never distorted during the transition.
+   * Animation: both elements fade in with opacity only — shape is never distorted.
    */
   const arrowW = height * 2.6;
-  const arrowH = height * 1.05;
+  const arrowH = height * 1.2;
 
   return (
     <div className="relative inline-flex flex-col items-start leading-none">
-      {/* Orange arrow — absolutely positioned above the wordmark, right-aligned */}
       <svg
         className="absolute pointer-events-none"
         style={{
@@ -54,22 +55,24 @@ export default function Logo({ height = 28, showSub = true, isDark = false }: Lo
         fill="none"
         aria-hidden="true"
       >
+        {/* Swoosh */}
         <motion.path
-          d="M 16 38 C 28 36 50 22 64 10"
+          d="M 16 32 C 36 29 46 16 55 8"
           stroke="#F59E0B"
-          strokeWidth="5"
+          strokeWidth="4.5"
           strokeLinecap="round"
           fill="none"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 0.8, ease: 'easeOut', delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
         />
+        {/* Arrowhead — opacity fade only, shape is never distorted */}
         <motion.path
-          d="M 82 2 L 65 6 L 74 20 Z"
+          d="M 57 3 L 44 6 L 52 16 Z"
           fill="#F59E0B"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.2, delay: 0.75 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
         />
       </svg>
 

@@ -2,18 +2,42 @@
 
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { createClient } from '@/lib/supabase';
 
 export default function ContactSection() {
   const t = useTranslations('contact');
+  const locale = useLocale();
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
   const formT = t.raw('form') as Record<string, string>;
-  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [form, setForm] = useState({ name: '', email: '', company: '', message: '' });
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
+    setStatus('loading');
+
+    const supabase = createClient();
+    const { error } = await supabase.from('contacts').insert({
+      name: form.name,
+      email: form.email,
+      company: form.company || null,
+      message: form.message,
+      locale,
+    });
+
+    if (error) {
+      console.error('Contact form error:', error);
+      setStatus('error');
+    } else {
+      setStatus('success');
+    }
   };
 
   return (
@@ -22,8 +46,6 @@ export default function ContactSection() {
         className="absolute top-0 left-0 right-0 h-px pointer-events-none"
         style={{ background: 'linear-gradient(90deg, transparent, rgba(212,175,55,0.2), transparent)' }}
       />
-
-      {/* Background glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] pointer-events-none"
         style={{ background: 'radial-gradient(ellipse, rgba(212,175,55,0.06) 0%, transparent 70%)' }}
@@ -31,6 +53,7 @@ export default function ContactSection() {
 
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
+
           {/* Left: statement */}
           <motion.div
             initial={{ opacity: 0, x: -40 }}
@@ -51,7 +74,6 @@ export default function ContactSection() {
             </p>
 
             <div className="space-y-6">
-              {/* Email */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -66,7 +88,6 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              {/* WhatsApp */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -76,18 +97,13 @@ export default function ContactSection() {
                 </div>
                 <div>
                   <div className="text-[#1A2635]/30 text-[10px] tracking-widest uppercase mb-1">WhatsApp</div>
-                  <a
-                    href="https://wa.me/6588181454"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-[#1A2635] text-sm hover:text-[#D4AF37] transition-colors"
-                  >
+                  <a href="https://wa.me/6588181454" target="_blank" rel="noopener noreferrer"
+                    className="text-[#1A2635] text-sm hover:text-[#D4AF37] transition-colors">
                     Chat with us →
                   </a>
                 </div>
               </div>
 
-              {/* Singapore */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -103,7 +119,6 @@ export default function ContactSection() {
                 </div>
               </div>
 
-              {/* Shanghai */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 border border-[#D4AF37]/30 flex items-center justify-center flex-shrink-0">
                   <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4">
@@ -127,7 +142,7 @@ export default function ContactSection() {
             animate={inView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 1, delay: 0.2, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
           >
-            {submitted ? (
+            {status === 'success' ? (
               <div className="glass-card p-12 flex flex-col items-center justify-center text-center h-full min-h-80">
                 <div className="w-12 h-12 border border-[#D4AF37] flex items-center justify-center mb-6">
                   <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6">
@@ -143,8 +158,7 @@ export default function ContactSection() {
                   <div>
                     <label className="text-[#1A2635]/35 text-[10px] tracking-widest uppercase block mb-2">{formT.name}</label>
                     <input
-                      type="text"
-                      required
+                      type="text" name="name" required value={form.name} onChange={handleChange}
                       className="w-full bg-transparent border-b border-[#1A2635]/10 focus:border-[#D4AF37] text-[#1A2635] text-sm py-2 outline-none transition-colors duration-300 placeholder-[#1A2635]/20"
                       placeholder="—"
                     />
@@ -152,8 +166,7 @@ export default function ContactSection() {
                   <div>
                     <label className="text-[#1A2635]/35 text-[10px] tracking-widest uppercase block mb-2">{formT.email}</label>
                     <input
-                      type="email"
-                      required
+                      type="email" name="email" required value={form.email} onChange={handleChange}
                       className="w-full bg-transparent border-b border-[#1A2635]/10 focus:border-[#D4AF37] text-[#1A2635] text-sm py-2 outline-none transition-colors duration-300 placeholder-[#1A2635]/20"
                       placeholder="—"
                     />
@@ -162,7 +175,7 @@ export default function ContactSection() {
                 <div>
                   <label className="text-[#1A2635]/35 text-[10px] tracking-widest uppercase block mb-2">{formT.company}</label>
                   <input
-                    type="text"
+                    type="text" name="company" value={form.company} onChange={handleChange}
                     className="w-full bg-transparent border-b border-[#1A2635]/10 focus:border-[#D4AF37] text-[#1A2635] text-sm py-2 outline-none transition-colors duration-300 placeholder-[#1A2635]/20"
                     placeholder="—"
                   />
@@ -170,21 +183,29 @@ export default function ContactSection() {
                 <div>
                   <label className="text-[#1A2635]/35 text-[10px] tracking-widest uppercase block mb-2">{formT.message}</label>
                   <textarea
-                    required
-                    rows={4}
+                    name="message" required rows={4} value={form.message} onChange={handleChange}
                     className="w-full bg-transparent border-b border-[#1A2635]/10 focus:border-[#D4AF37] text-[#1A2635] text-sm py-2 outline-none transition-colors duration-300 placeholder-[#1A2635]/20 resize-none"
                     placeholder="—"
                   />
                 </div>
+
+                {status === 'error' && (
+                  <p className="text-red-500/70 text-xs tracking-wide">
+                    Something went wrong. Please try again or email us directly.
+                  </p>
+                )}
+
                 <button
                   type="submit"
-                  className="w-full bg-[#D4AF37] text-[#1A2635] text-xs font-semibold tracking-[0.2em] uppercase py-4 hover:bg-[#E8C84A] transition-colors duration-300"
+                  disabled={status === 'loading'}
+                  className="w-full bg-[#D4AF37] text-[#1A2635] text-xs font-semibold tracking-[0.2em] uppercase py-4 hover:bg-[#E8C84A] transition-colors duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  {formT.submit}
+                  {status === 'loading' ? '···' : formT.submit}
                 </button>
               </form>
             )}
           </motion.div>
+
         </div>
       </div>
     </section>
