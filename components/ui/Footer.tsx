@@ -56,7 +56,7 @@ export default function Footer() {
               <a href="mailto:ask@leapsunpartners.com" className="text-[#F5F5F5]/40 hover:text-[#F5F5F5] text-xs transition-colors duration-300">
                 ask@leapsunpartners.com
               </a>
-              <a href="https://wa.me/6588181454" target="_blank" rel="noopener noreferrer" className="text-[#F5F5F5]/40 hover:text-[#D4AF37] text-xs transition-colors duration-300">
+              <a href="https://wa.me/6587988740" target="_blank" rel="noopener noreferrer" className="text-[#F5F5F5]/40 hover:text-[#D4AF37] text-xs transition-colors duration-300">
                 WhatsApp →
               </a>
               <div className="text-[#F5F5F5]/20 text-xs leading-relaxed">

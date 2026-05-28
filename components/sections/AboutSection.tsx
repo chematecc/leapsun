@@ -83,7 +83,7 @@ export default function AboutSection() {
               style={{ height: '240px' }}
             >
               <img
-                src="https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=900&q=80&auto=format&fit=crop"
+                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=90&auto=format&fit=crop"
                 alt="Strategic partnership"
                 className="w-full h-full object-cover"
               />
