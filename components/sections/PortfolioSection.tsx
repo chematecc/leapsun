@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useLocale } from 'next-intl';
 
@@ -13,6 +13,7 @@ interface Company {
   desc: string;
   descZh: string;
   url?: string;
+  logo?: string;
   initial: string;
   bgColor: string;
   textColor: string;
@@ -40,6 +41,7 @@ const categories: Category[] = [
     companies: [
       {
         id: 'angelexo',
+        logo: '/logos/angelexo.png',
         name: 'Angelexo',
         nameZh: 'Angelexo',
         tagline: 'Neuro-Rehabilitation Robotics',
@@ -54,6 +56,7 @@ const categories: Category[] = [
       },
       {
         id: 'pegbio',
+        logo: '/logos/pegbio.png',
         name: 'Pegbio',
         nameZh: '派格生物',
         tagline: 'Long-Acting Biologics',
@@ -68,6 +71,7 @@ const categories: Category[] = [
       },
       {
         id: 'bdgene',
+        logo: '/logos/bdgene.png',
         name: 'BDgene',
         nameZh: '本导基因',
         tagline: 'In Vivo CRISPR Gene Editing',
@@ -92,6 +96,7 @@ const categories: Category[] = [
     companies: [
       {
         id: 'minisilicon',
+        logo: '/logos/minisilicon.png',
         name: 'Minisilicon',
         nameZh: '米硅科技',
         tagline: 'Optical Communication Chips',
@@ -106,6 +111,7 @@ const categories: Category[] = [
       },
       {
         id: 'hawkeyes',
+        logo: '/logos/hawkeyes.png',
         name: 'Hawkeyes',
         nameZh: '禾楷电气',
         tagline: 'Industrial Safety Intelligence',
@@ -120,6 +126,7 @@ const categories: Category[] = [
       },
       {
         id: 'surmeta',
+        logo: '/logos/surmeta.png',
         name: 'SurMeta',
         nameZh: '申美信息',
         tagline: 'Smart Factory Intelligence',
@@ -144,6 +151,7 @@ const categories: Category[] = [
     companies: [
       {
         id: 'keying',
+        logo: '/logos/keying.png',
         name: 'Keying',
         nameZh: '凯诘电商',
         tagline: 'Full-Stack E-Commerce Operations',
@@ -158,6 +166,7 @@ const categories: Category[] = [
       },
       {
         id: 'sensilab',
+        logo: '/logos/sensilab.png',
         name: 'Sensilab',
         nameZh: 'Sensilab',
         tagline: 'European Premium Health Supplements',
@@ -189,6 +198,7 @@ function CompanyCard({ company, delay, locale }: { company: Company; delay: numb
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   const isZh = locale === 'zh';
+  const [logoFailed, setLogoFailed] = React.useState(false);
 
   return (
     <motion.div
@@ -201,18 +211,44 @@ function CompanyCard({ company, delay, locale }: { company: Company; delay: numb
     >
       {/* Logo + name row */}
       <div className="flex items-start gap-4 mb-4">
-        <div
-          className="w-14 h-14 flex-shrink-0 flex items-center justify-center text-xl font-bold transition-transform duration-300 group-hover:scale-105"
-          style={{
-            backgroundColor: company.bgColor,
-            color: company.textColor,
-            border: `1.5px solid ${company.borderColor}`,
-            fontFamily: 'var(--font-geist-sans), sans-serif',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          {company.initial}
-        </div>
+        {company.logo && !logoFailed ? (
+          <a
+            href={company.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
+            style={{
+              width: '80px',
+              height: '48px',
+              backgroundColor: company.bgColor,
+              border: `1.5px solid ${company.borderColor}`,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '6px 8px',
+            }}
+          >
+            <img
+              src={company.logo}
+              alt={company.name}
+              onError={() => setLogoFailed(true)}
+              style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            />
+          </a>
+        ) : (
+          <div
+            className="w-14 h-14 flex-shrink-0 flex items-center justify-center text-xl font-bold transition-transform duration-300 group-hover:scale-105"
+            style={{
+              backgroundColor: company.bgColor,
+              color: company.textColor,
+              border: `1.5px solid ${company.borderColor}`,
+              fontFamily: 'var(--font-geist-sans), sans-serif',
+              letterSpacing: '-0.02em',
+            }}
+          >
+            {company.initial}
+          </div>
+        )}
         <div className="pt-0.5 min-w-0">
           <div className="flex items-baseline gap-2 flex-wrap">
             <h4 className="text-[#1A2635] text-base font-semibold tracking-tight leading-tight">{company.name}</h4>

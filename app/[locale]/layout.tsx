@@ -21,6 +21,10 @@ export const metadata: Metadata = {
   title: 'Leapsun Partners | Connecting Ideas, Capital and Opportunities',
   description: 'Leapsun Partners is a strategic investment and partnership platform connecting capital, industries, and emerging opportunities across healthcare, biotechnology, and global markets.',
   keywords: ['investment', 'partnership', 'healthcare', 'biotechnology', 'cross-border', 'halal', 'emerging markets'],
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: 'Leapsun Partners',
     description: 'Connecting Ideas, Capital and Opportunities.',
