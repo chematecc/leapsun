@@ -71,7 +71,7 @@ export default function ExpertiseSection() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-80px' });
 
-  const items = t.raw('items') as { title: string; desc: string }[];
+  const items = t.raw('items') as { title: string; desc: string; url?: string }[];
 
   return (
     <section id="expertise" className="relative py-32 lg:py-48 overflow-hidden" ref={ref}
@@ -106,10 +106,44 @@ export default function ExpertiseSection() {
           initial="hidden"
           animate={inView ? 'show' : 'hidden'}
           variants={{ show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5"
         >
           {items.map((item, i) => {
             const s = cardStyles[i];
+            // 5 items: row1 = 3 cards (span 2 each), row2 = 2 cards centered
+            const colClass =
+              i < 3 ? 'lg:col-span-2' :
+              i === 3 ? 'lg:col-start-2 lg:col-span-2' :
+              'lg:col-span-2';
+
+            const inner = (
+              <>
+                {/* Large number watermark */}
+                <div className="absolute -top-2 right-5 pointer-events-none select-none leading-none"
+                  style={{ color: s.numColor, fontSize: '5rem', fontWeight: 300 }}>
+                  {String(i + 1).padStart(2, '0')}
+                </div>
+                <div className="relative z-10 flex flex-col h-full">
+                  {/* Icon */}
+                  <div className="w-11 h-11 flex items-center justify-center mb-6 rounded-sm transition-transform duration-300 group-hover:scale-110"
+                    style={{ color: s.iconColor, backgroundColor: `${s.accentColor}14` }}>
+                    {s.icon}
+                  </div>
+                  <h3 className="text-[#1A2635] text-lg font-semibold tracking-tight mb-3 leading-snug">{item.title}</h3>
+                  <p className="text-[#1A2635]/55 text-sm leading-relaxed flex-1">{item.desc}</p>
+                  {item.url && (
+                    <div className="mt-7 flex items-center gap-2 text-xs tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{ color: s.accentColor }}>
+                      <span>Learn More</span>
+                      <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
+                        <path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+
             return (
               <motion.div
                 key={i}
@@ -117,33 +151,13 @@ export default function ExpertiseSection() {
                   hidden: { opacity: 0, y: 30 },
                   show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] } },
                 }}
-                className="group relative p-8 lg:p-10 overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-1"
+                className={`group relative p-8 lg:p-10 overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-1 ${colClass}`}
                 style={{ backgroundColor: s.tint, borderTop: `2.5px solid ${s.accentColor}` }}
               >
-                {/* Large number watermark */}
-                <div className="absolute -top-2 right-5 text-7xl font-light pointer-events-none select-none leading-none"
-                  style={{ color: s.numColor, fontSize: '5rem' }}>
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-
-                <div className="relative z-10">
-                  {/* Icon */}
-                  <div className="w-11 h-11 flex items-center justify-center mb-7 rounded-sm transition-transform duration-300 group-hover:scale-110"
-                    style={{ color: s.iconColor, backgroundColor: `${s.accentColor}14` }}>
-                    {s.icon}
-                  </div>
-
-                  <h3 className="text-[#1A2635] text-xl font-semibold tracking-tight mb-3">{item.title}</h3>
-                  <p className="text-[#1A2635]/55 text-sm leading-relaxed">{item.desc}</p>
-
-                  <div className="mt-8 flex items-center gap-2 text-xs tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{ color: s.accentColor }}>
-                    <span>Learn More</span>
-                    <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
-                      <path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  </div>
-                </div>
+                {item.url ? (
+                  <a href={item.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-20" aria-label={item.title} />
+                ) : null}
+                {inner}
               </motion.div>
             );
           })}
