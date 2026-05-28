@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { useTranslations, useLocale } from 'next-intl';
-import { createClient } from '@/lib/supabase';
 
 export default function ContactSection() {
   const t = useTranslations('contact');
@@ -23,20 +22,24 @@ export default function ContactSection() {
     e.preventDefault();
     setStatus('loading');
 
-    const supabase = createClient();
-    const { error } = await supabase.from('contacts').insert({
-      name: form.name,
-      email: form.email,
-      company: form.company || null,
-      message: form.message,
-      locale,
-    });
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          company: form.company || null,
+          message: form.message,
+          locale,
+        }),
+      });
 
-    if (error) {
-      console.error('Contact form error:', error);
-      setStatus('error');
-    } else {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setStatus('success');
+    } catch (err) {
+      console.error('Contact form error:', err);
+      setStatus('error');
     }
   };
 
