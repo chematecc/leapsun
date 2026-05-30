@@ -66,6 +66,9 @@ const cardStyles = [
   },
 ];
 
+/* Flat-top hexagon clip path */
+const HEX_CLIP = 'polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)';
+
 export default function ExpertiseSection() {
   const t = useTranslations('expertise');
   const ref = useRef(null);
@@ -73,11 +76,48 @@ export default function ExpertiseSection() {
 
   const items = t.raw('items') as { title: string; desc: string; url?: string }[];
 
+  /*
+   * Honeycomb layout — 5 cells:
+   *   Row 1: cells 0, 1, 2  (3 hexagons)
+   *   Row 2: cells 3, 4     (2 hexagons, offset to sit in the gaps)
+   *
+   * Using flat-top hexagons (rotated 90°):
+   *   W = hex width, H = hex height = W * sin(60°) * 2 = W * √3
+   *   Horizontal step = W * 0.75
+   *   Vertical step   = H
+   *   Row 2 offset    = H / 2
+   */
+  const HEX_W = 270;
+  const HEX_H = Math.round(HEX_W * Math.sqrt(3) / 2); // ≈ 234
+  const H_STEP = HEX_W * 0.75;                         // horizontal step between hex centres
+  const V_STEP = HEX_H;                                // vertical step
+
+  // Row 1: 3 hexes centred
+  const row1W = 2 * H_STEP + HEX_W;   // span from first centre to last centre + half hex each side
+  const r1StartX = -(H_STEP);          // relative to canvas centre
+
+  const positions = [
+    { x: r1StartX + 0 * H_STEP, y: 0 },
+    { x: r1StartX + 1 * H_STEP, y: 0 },
+    { x: r1StartX + 2 * H_STEP, y: 0 },
+    // Row 2: offset so they sit in the notches between row-1 hexes
+    { x: r1StartX + 0.5 * H_STEP, y: V_STEP },
+    { x: r1StartX + 1.5 * H_STEP, y: V_STEP },
+  ];
+
+  const canvasW = row1W + HEX_W;
+  const canvasH = V_STEP + HEX_H;
+
   return (
-    <section id="expertise" className="relative py-32 lg:py-48 overflow-hidden" ref={ref}
-      style={{ background: 'linear-gradient(160deg, #ffffff 0%, #fafaf8 100%)' }}>
+    <section
+      id="expertise"
+      className="relative py-32 lg:py-48 overflow-hidden"
+      ref={ref}
+      style={{ background: 'linear-gradient(160deg, #ffffff 0%, #fafaf8 100%)' }}
+    >
       {/* Subtle dot grid */}
-      <div className="absolute inset-0 opacity-[0.022] pointer-events-none"
+      <div
+        className="absolute inset-0 opacity-[0.022] pointer-events-none"
         style={{ backgroundImage: 'radial-gradient(rgba(26,38,53,0.9) 1px, transparent 1px)', backgroundSize: '40px 40px' }}
       />
 
@@ -87,7 +127,7 @@ export default function ExpertiseSection() {
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] }}
-          className="mb-20 lg:mb-28"
+          className="mb-20 lg:mb-24"
         >
           <div className="flex items-center gap-3 mb-6">
             <span className="h-px w-8 bg-[#D4AF37]" />
@@ -101,67 +141,129 @@ export default function ExpertiseSection() {
           </div>
         </motion.div>
 
-        {/* Cards grid */}
-        <motion.div
-          initial="hidden"
-          animate={inView ? 'show' : 'hidden'}
-          variants={{ show: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5"
-        >
+        {/* ── Honeycomb (desktop ≥ lg) ── */}
+        <div className="hidden lg:flex justify-center items-start">
+          <div className="relative" style={{ width: canvasW, height: canvasH }}>
+            {items.map((item, i) => {
+              const s = cardStyles[i];
+              const pos = positions[i];
+              const left = pos.x + canvasW / 2 - HEX_W / 2;
+              const top  = pos.y;
+
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, scale: 0.75 }}
+                  animate={inView ? { opacity: 1, scale: 1 } : {}}
+                  transition={{
+                    duration: 0.65,
+                    delay: 0.1 + i * 0.09,
+                    ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
+                  }}
+                  className="absolute group"
+                  style={{ width: HEX_W, height: HEX_H, left, top }}
+                >
+                  {/* Outer glow border hex */}
+                  <div
+                    className="absolute inset-0 opacity-30 transition-opacity duration-500 group-hover:opacity-60"
+                    style={{
+                      clipPath: HEX_CLIP,
+                      background: s.accentColor,
+                      transform: 'scale(1.025)',
+                    }}
+                  />
+
+                  {/* Main hex cell */}
+                  <div
+                    className="absolute inset-0 flex flex-col items-center justify-center text-center transition-all duration-500 group-hover:brightness-[0.96]"
+                    style={{ clipPath: HEX_CLIP, backgroundColor: s.tint }}
+                  >
+                    {item.url && (
+                      <a
+                        href={item.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="absolute inset-0 z-20"
+                        aria-label={item.title}
+                      />
+                    )}
+
+                    <div className="relative z-10 flex flex-col items-center gap-2 px-10">
+                      {/* Sequence number */}
+                      <span
+                        className="text-[10px] font-mono tracking-[0.25em]"
+                        style={{ color: `${s.accentColor}70` }}
+                      >
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+
+                      {/* Icon */}
+                      <div
+                        className="w-10 h-10 flex items-center justify-center rounded-sm transition-transform duration-300 group-hover:scale-110"
+                        style={{ color: s.iconColor, backgroundColor: `${s.accentColor}18` }}
+                      >
+                        {s.icon}
+                      </div>
+
+                      {/* Title */}
+                      <h3
+                        className="text-[#1A2635] font-semibold tracking-tight leading-tight mt-1"
+                        style={{ fontSize: '0.82rem' }}
+                      >
+                        {item.title}
+                      </h3>
+
+                      {/* Description */}
+                      <p
+                        className="text-[#1A2635]/50 leading-relaxed"
+                        style={{ fontSize: '0.68rem', maxWidth: '140px' }}
+                      >
+                        {item.desc}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── Mobile fallback: stacked cards ── */}
+        <div className="flex flex-col gap-4 lg:hidden">
           {items.map((item, i) => {
             const s = cardStyles[i];
-            // 5 items: row1 = 3 cards (span 2 each), row2 = 2 cards centered
-            const colClass =
-              i < 3 ? 'lg:col-span-2' :
-              i === 3 ? 'lg:col-start-2 lg:col-span-2' :
-              'lg:col-span-2';
-
-            const inner = (
-              <>
-                {/* Large number watermark */}
-                <div className="absolute -top-2 right-5 pointer-events-none select-none leading-none"
-                  style={{ color: s.numColor, fontSize: '5rem', fontWeight: 300 }}>
-                  {String(i + 1).padStart(2, '0')}
-                </div>
-                <div className="relative z-10 flex flex-col h-full">
-                  {/* Icon */}
-                  <div className="w-11 h-11 flex items-center justify-center mb-6 rounded-sm transition-transform duration-300 group-hover:scale-110"
-                    style={{ color: s.iconColor, backgroundColor: `${s.accentColor}14` }}>
-                    {s.icon}
-                  </div>
-                  <h3 className="text-[#1A2635] text-lg font-semibold tracking-tight mb-3 leading-snug">{item.title}</h3>
-                  <p className="text-[#1A2635]/55 text-sm leading-relaxed flex-1">{item.desc}</p>
-                  {item.url && (
-                    <div className="mt-7 flex items-center gap-2 text-xs tracking-widest uppercase opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                      style={{ color: s.accentColor }}>
-                      <span>Learn More</span>
-                      <svg viewBox="0 0 16 16" fill="none" className="w-3 h-3">
-                        <path d="M2 8h12M8 2l6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              </>
-            );
-
             return (
               <motion.div
                 key={i}
-                variants={{
-                  hidden: { opacity: 0, y: 30 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.23, 1, 0.32, 1] as [number, number, number, number] } },
+                initial={{ opacity: 0, y: 24 }}
+                animate={inView ? { opacity: 1, y: 0 } : {}}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.05 * i,
+                  ease: [0.23, 1, 0.32, 1] as [number, number, number, number],
                 }}
-                className={`group relative p-8 lg:p-10 overflow-hidden transition-all duration-500 hover:shadow-lg hover:-translate-y-1 ${colClass}`}
+                className="group relative p-7 overflow-hidden"
                 style={{ backgroundColor: s.tint, borderTop: `2.5px solid ${s.accentColor}` }}
               >
-                {item.url ? (
+                {item.url && (
                   <a href={item.url} target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-20" aria-label={item.title} />
-                ) : null}
-                {inner}
+                )}
+                <div className="flex items-start gap-4">
+                  <div
+                    className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-sm"
+                    style={{ color: s.iconColor, backgroundColor: `${s.accentColor}18` }}
+                  >
+                    {s.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-[#1A2635] text-base font-semibold tracking-tight mb-1 leading-snug">{item.title}</h3>
+                    <p className="text-[#1A2635]/55 text-sm leading-relaxed">{item.desc}</p>
+                  </div>
+                </div>
               </motion.div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
