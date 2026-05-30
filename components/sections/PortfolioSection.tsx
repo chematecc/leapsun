@@ -172,7 +172,7 @@ const categories: Category[] = [
         tagline: 'Vision Healthcare — EU Nutrition Supplement Group',
         taglineZh: 'Vision Healthcare 旗下核心品牌',
         desc: 'Sensilab is a core brand of Vision Healthcare — the EU\'s leading nutrition supplement group, headquartered in the Netherlands. Built on evidence-based formulations and strong digital marketing channels, Sensilab serves tens of millions of customers across 40+ countries with a portfolio spanning vitamins & minerals, weight management, and functional health products. Leapsun is a long-term strategic partner driving Sensilab\'s premium range into the Asia-Pacific and China markets.',
-        descZh: 'Sensilab 是欧盟领先营养补充剂集团 Vision Healthcare 旗下核心品牌，集团总部位于荷兰。Sensilab 以循证配方与强大的数字营销渠道为核心，服务全球40余个国家超数千万用户，产品线覆盖维生素矿物质、体重管理及功能性健康品。利生投资长期推动 Sensilab 优质产品组合进入亚太区及中国市场。',
+        descZh: 'Sensilab 是欧盟领先营养补充剂集团 Vision Healthcare 旗下核心品牌，集团总部位于荷兰。Sensilab 以循证配方与强大的数字营销渠道为核心，服务全球40余个国家超数千万用户，产品线覆盖维生素矿物质、体重管理及功能性健康品。利生合创投资长期推动 Sensilab 优质产品组合进入亚太区及中国市场。',
         url: 'https://www.sensilab.com',
         initial: 'S',
         bgColor: '#FFF8EC',
