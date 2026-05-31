@@ -56,6 +56,9 @@ export async function generateMetadata({
     authors: [{ name: 'Leapsun Partners' }],
     creator: 'Leapsun Partners',
     robots: { index: true, follow: true },
+    verification: {
+      google: 'nxs5JF7HD9cUeAy_sZIVhBfU9lu5aRRLaEH5043gPQ4',
+    },
     alternates: {
       canonical: `https://leapsunpartners.com/${locale}`,
       languages: {
