@@ -107,9 +107,43 @@ export default async function LocaleLayout({
 
   const messages = await getMessages();
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: locale === 'zh' ? '利生合创投资' : 'Leapsun Partners',
+    alternateName: locale === 'zh' ? 'Leapsun Partners' : '利生合创投资',
+    url: 'https://leapsunpartners.com',
+    logo: 'https://leapsunpartners.com/leapsun_logo_transparent.png',
+    description: metaByLocale[locale]?.description ?? metaByLocale.en.description,
+    email: 'ask@leapsunpartners.com',
+    foundingDate: '2019',
+    areaServed: ['SG', 'CN', 'HK'],
+    address: [
+      {
+        '@type': 'PostalAddress',
+        streetAddress: '100 Peck Seah Street, PS100 #08-14',
+        addressLocality: 'Singapore',
+        postalCode: '079333',
+        addressCountry: 'SG',
+      },
+      {
+        '@type': 'PostalAddress',
+        streetAddress: '上海市新金桥路1122号方正大厦1912室',
+        addressLocality: '上海',
+        postalCode: '201206',
+        addressCountry: 'CN',
+      },
+    ],
+    sameAs: ['https://www.linkedin.com/company/leapsun-partners'],
+  };
+
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <NextIntlClientProvider messages={messages}>
           {children}
         </NextIntlClientProvider>
